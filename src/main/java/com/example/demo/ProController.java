@@ -85,6 +85,37 @@ public class ProController {
 		}
 	}
 	
+	@PostMapping("serviceshealth")
+	public ServiceDTO servicesHealth(@RequestBody ServiceDTO serviceDTO) {
+		try {
+			ServiceDTO response = new ServiceDTO();
+			response.setName(serviceDTO.getName());
+			response.setStatus(execCommand(String.format("systemctl show --property ActiveState --value %s",serviceDTO.getName())));
+			response.setMainPID(execCommand(String.format("systemctl show --property MainPID --value %s",serviceDTO.getName())));
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@PostMapping("service")
+	public SearchDTO serviceControl(@RequestBody SearchDTO search) {
+		try {
+			// TODO results must be list of objects and includes server names as well
+			SearchDTO result = new SearchDTO();
+			List<String> resultLines = new ArrayList<>();
+			for(String c : search.getLogLocation()) {
+				resultLines.addAll(execSearch(String.format("cd %s && grep -iIR '%s'",c,search.getSearch())));
+			}
+			result.setResults(resultLines);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	// returns single only 
 	public String execCommand(String command) throws Exception{
 		

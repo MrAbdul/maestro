@@ -1,0 +1,67 @@
+<html>
+<head>
+      <link href = "css/bootstrap.min.css" rel = "stylesheet"/>
+          <script src="js/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="js/prism.js" data-manual></script>
+
+    <title>Maestro</title>
+</head>
+<body>
+<div class="mt-4 container">
+<h1 class="mb-4"><span class="text-primary">Maestro</span></h1>
+</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+
+    <div class="collapse navbar-collapse" id="navbarColor03">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="/">Health
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="applications">Applications</a>
+        </li>   
+        <li class="nav-item">
+          <a class="nav-link" href="search">Search</a>
+        </li>        
+        <li class="nav-item">
+          <a class="nav-link" href="config">Configuration</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="mt-4 container">
+
+<table class="table table-hover mt-4">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Server</th>
+      <th scope="col">PID</th>
+      <th scope="col">Status</th>
+      <th scope="col">Controls</th>
+    </tr>
+  </thead>
+  <tbody>
+	<tr th:each="app: ${applications}">
+		<th scope="row"><span th:text="${app.getName}"></span></th>
+		<td><span th:text="${app.getServer}"></span></td>
+		<td><span th:text="${app.getMainPID}"></span></td>
+		<td><span th:text="${app.getStatus}"></span></td>
+		<td><button class="btn btn-success">Start</button> 
+		<button class="btn btn-primary">Stop</button> 
+		<button class="btn btn-dark">Kill</button></td>
+	 </tr>
+  </tbody>
+</table>
+
+
+</div>
+
+</body>
+</html>

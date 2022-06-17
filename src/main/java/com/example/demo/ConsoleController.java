@@ -170,4 +170,49 @@ public class ConsoleController {
 			return "search";
 		}
 	}
+	
+	
+	@GetMapping("applications")
+	public String applications(@ModelAttribute("services") ServiceDTO services, Model model) {
+		
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+
+			List<ServiceDTO> applications = new ArrayList<ServiceDTO>();
+
+			File configFile = new File("config.json");
+
+			BufferedReader br = new BufferedReader(new FileReader(configFile));
+
+			String x = br.lines().collect(Collectors.joining());
+
+			AppDTO appDTO = new ObjectMapper().readValue(x, new TypeReference<AppDTO>(){});
+
+			for(AppServersDTO a : appDTO.getServers()) {
+
+				List<AppListDTO> al = a.getApplications().stream().collect(Collectors.toList());
+				
+
+				for(AppListDTO q : al) {
+					ServiceDTO s = new ServiceDTO();
+					s.setName(q.getServiceName());
+					HttpEntity<ServiceDTO> request = new HttpEntity<>(s);
+
+					ServiceDTO output = restTemplate.postForObject(String.format("%s/data/serviceshealth",a.getIp()), request, ServiceDTO.class);
+					output.setServer(a.getName());
+					applications.add(output);
+				}
+
+
+			}
+
+			br.close();
+			model.addAttribute("applications", applications);
+
+			return "applications";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "applications";
+		}
+	}
 }
