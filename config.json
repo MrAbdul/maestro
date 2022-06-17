@@ -1,0 +1,17 @@
+{
+    "servers": [
+        {
+            "name": "Server 1",
+            "ip": "http://172.27.143.241:9090",
+            "applications": [
+                {
+                    "name": "app1",
+                    "serviceName": "mydemo",
+                    "logs": [
+                        "/projects/demo/logs/"
+                    ]
+                }
+            ]
+        }
+    ]
+}

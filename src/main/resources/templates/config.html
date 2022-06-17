@@ -4,6 +4,7 @@
           <script src="js/jquery.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="js/prism.js" data-manual></script>
+
     <title>Boubyan Maestro</title>
 </head>
 <body>
@@ -21,25 +22,39 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="search">Search</a>
+        </li>        
+        <li class="nav-item">
+          <a class="nav-link" href="config">Configuration</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
 
-<form action="#" th:action="@{/search}" th:object="${search}" method="post">
-    <label for="name">Search</label>
-    <input type="text" th:field="*{search} "id="search" placeholder="Search">
-    <input type="submit" value="Search">   
-</form>
 
-<div th:switch="${searchResults}">
-    <p th:case="null">No users yet!</p>
-    <p th:each="searchItem : ${searchResults}" th:text="${searchItem}">
-        </p>
-</div>
+<form action="#" th:action="@{/config}" th:object="${config}" method="post">
+    <label for="config">Config file:</label>
+    <textarea rows="20" class="form-control mb-4" 
+    type="text" th:field="*{config}" id="config" placeholder="config goes here"
+     style="white-space: pre"></textarea>
+    <input type="submit" value="Save" class="btn btn-success">   
+</form>
+<button id="pretty">Pretty</button>
 
 </div>
 
 </body>
+<script>
+
+document.getElementById("pretty").addEventListener("click",function(){
+	try {
+	var x = document.getElementById("config").value;
+	var m = JSON.parse(x);
+	document.getElementById("config").value = JSON.stringify(m, undefined, 4);
+	} catch(e){
+	alert("Invalid JSON !")
+}
+});
+
+</script>
 </html>
