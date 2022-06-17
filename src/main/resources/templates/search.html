@@ -1,45 +1,66 @@
 <html>
-<head>
+   <head>
       <link href = "css/bootstrap.min.css" rel = "stylesheet"/>
-          <script src="js/jquery.min.js"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="js/prism.js" data-manual></script>
-    <title>Boubyan Maestro</title>
-</head>
-<body>
-<div class="mt-4 container">
-<h1 class="mb-4"><span class="text-primary">Boubyan</span> <span class="text-secondary">Maestro</span></h1>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
+      <script src="js/jquery.min.js"></script>
+      <script src="/js/bootstrap.bundle.min.js"></script>
+      <script src="js/prism.js" data-manual></script>
+      <title>Maestro</title>
+   </head>
+   <body onload="hightlightResults()">
+      <div class="mt-4 container">
+         <h1 class="mb-4"><span class="text-primary">Maestro</span></h1>
+      </div>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+         <div class="container">
+            <div class="collapse navbar-collapse" id="navbarColor03">
+               <ul class="navbar-nav me-auto">
+                  <li class="nav-item">
+                     <a class="nav-link active" href="/">Health
+                     <span class="visually-hidden">(current)</span>
+                     </a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="applications">Applications</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="search">Search</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="config">Configuration</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <div class="mt-4 container">
+         <form action="#" th:action="@{/search}" th:object="${search}" method="post">
+            <label for="name">Search</label>
+            <input type="text" th:field="*{search} "id="search" placeholder="Search" class="form-control" autocomplete="off">
+            <input type="submit" value="Search" class="btn btn-info mt-4">   
+         </form>
+         <div th:switch="${searchResults}" id="results">
+            <p th:case="null">No results found!</p>
+            <div class="card mb-4" th:each="searchItem : ${searchResults}">
+               <div class="card-body">
+                  <p class="card-text" th:text="${#strings.arraySplit(searchItem, ':')[2]}"></p>
+                  <span class="badge bg-info" th:text="${#strings.arraySplit(searchItem, ':')[0]}"></span>
+                  <span class="badge bg-danger" th:text="${#strings.arraySplit(searchItem, ':')[1]}"></span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+   <script>
+	function hightlightResults(){
+	
+		var x = document.getElementById("results");
+   		var s = document.getElementById("search");
+   		if(s.value !== ''){
+   		var t = x.innerHTML.replaceAll(s.value,'<mark class="bg-warning">$&</mark>');
+   		   		x.innerHTML = t;
 
-    <div class="collapse navbar-collapse" id="navbarColor03">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="/">Health
-            <span class="visually-hidden">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="search">Search</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+   		}
 
-<form action="#" th:action="@{/search}" th:object="${search}" method="post">
-    <label for="name">Search</label>
-    <input type="text" th:field="*{search} "id="search" placeholder="Search">
-    <input type="submit" value="Search">   
-</form>
-
-<div th:switch="${searchResults}">
-    <p th:case="null">No users yet!</p>
-    <p th:each="searchItem : ${searchResults}" th:text="${searchItem}">
-        </p>
-</div>
-
-</div>
-
-</body>
+	};
+   </script>
 </html>

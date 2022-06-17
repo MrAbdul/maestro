@@ -6,11 +6,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,14 +20,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class ConsoleController {
-
-	@Value("#{'${maestro.serversList}'.split(',')}")
-	List<String> serversList;
 
 	@GetMapping
 	public String index(Model model) {
@@ -126,52 +121,53 @@ public class ConsoleController {
 	public String searchLogs(@ModelAttribute("search") SearchDTO search, Model model) {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
-			
+
 			List<String> outputList = new ArrayList<>();
-			
+
 			File configFile = new File("config.json");
-			
+
 			BufferedReader br = new BufferedReader(new FileReader(configFile));
-			
+
 			String x = br.lines().collect(Collectors.joining());
-			
+
 			AppDTO appDTO = new ObjectMapper().readValue(x, new TypeReference<AppDTO>(){});
-			
+
 			List<String> allLogs = new ArrayList<String>();
-			
+
 			for(AppServersDTO a : appDTO.getServers()) {
-				
+
 				List<AppListDTO> al = a.getApplications().stream().collect(Collectors.toList());
 
 				for(AppListDTO q : al) {
-					System.out.println(q.getName());
 					allLogs.addAll(q.getLogs());
 				}
-				
+
 				search.setLogLocation(allLogs); 
 
 				HttpEntity<SearchDTO> request = new HttpEntity<>(search);
 
-				String url = String.format("%s/data/systemStatus",a.getIp());
-				String output = restTemplate.postForObject(String.format("%s/data/searchLogs",a.getIp()), request, String.class);
-				outputList.add(output);
+				SearchDTO output = restTemplate.postForObject(String.format("%s/data/searchLogs",a.getIp()), request, SearchDTO.class);
+
+				// Will prevent adding null results
+				if(output != null)
+					Optional.ofNullable(
+							output.getResults()
+							.stream()
+							.map(m->a.getName()+":"+m)
+							.collect(Collectors.toList()))
+					.ifPresent(outputList::addAll);
+				else
+					outputList = null;
+
 			}
 
-			//		for(String server : serversList) {
-			//			HttpEntity<SearchDTO> request = new HttpEntity<>(search);
-			//
-			//			String output = restTemplate.postForObject(String.format("%s/data/searchLogs",server), request, String.class);
-			//
-			//			outputList.add(output);
-			//		}
-
+			br.close();
 			model.addAttribute("searchResults", outputList);
 
 			return "search";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "search";
-
 		}
 	}
 }

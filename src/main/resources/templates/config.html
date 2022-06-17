@@ -5,13 +5,14 @@
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="js/prism.js" data-manual></script>
 
-    <title>Boubyan Maestro</title>
+    <title>Maestro</title>
 </head>
-<body>
+<body onload="prettyJSON()">
 <div class="mt-4 container">
-<h1 class="mb-4"><span class="text-primary">Boubyan</span> <span class="text-secondary">Maestro</span></h1>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
+<h1 class="mb-4"><span class="text-primary">Maestro</span></h1>
+</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
 
     <div class="collapse navbar-collapse" id="navbarColor03">
       <ul class="navbar-nav me-auto">
@@ -20,6 +21,9 @@
             <span class="visually-hidden">(current)</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="applications">Applications</a>
+        </li>   
         <li class="nav-item">
           <a class="nav-link" href="search">Search</a>
         </li>        
@@ -31,6 +35,8 @@
   </div>
 </nav>
 
+<div class="mt-4 container">
+
 
 <form action="#" th:action="@{/config}" th:object="${config}" method="post">
     <label for="config">Config file:</label>
@@ -39,7 +45,7 @@
      style="white-space: pre"></textarea>
     <input type="submit" value="Save" class="btn btn-success">   
 </form>
-<button id="pretty">Pretty</button>
+<button id="pretty" class="btn btn-info">Validate</button>
 
 </div>
 
@@ -47,14 +53,21 @@
 <script>
 
 document.getElementById("pretty").addEventListener("click",function(){
-	try {
+	
+});
+
+	function prettyJSON(){
+	
+try {
 	var x = document.getElementById("config").value;
 	var m = JSON.parse(x);
 	document.getElementById("config").value = JSON.stringify(m, undefined, 4);
+
 	} catch(e){
 	alert("Invalid JSON !")
 }
-});
 
+	};
+   
 </script>
 </html>

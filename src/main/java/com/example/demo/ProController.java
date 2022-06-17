@@ -2,7 +2,8 @@ package com.example.demo;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,14 +69,16 @@ public class ProController {
 	}
 
 	@PostMapping("searchLogs")
-	public String searchLogs(@RequestBody SearchDTO search) {
+	public SearchDTO searchLogs(@RequestBody SearchDTO search) {
 		try {
 			// TODO results must be list of objects and includes server names as well
-			StringBuilder result = new StringBuilder();
+			SearchDTO result = new SearchDTO();
+			List<String> resultLines = new ArrayList<>();
 			for(String c : search.getLogLocation()) {
-				result.append(execSearch(String.format("cd %s && grep -IRc '%s'",c,search.getSearch())));
+				resultLines.addAll(execSearch(String.format("cd %s && grep -iIR '%s'",c,search.getSearch())));
 			}
-			return result.toString();
+			result.setResults(resultLines);
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -108,25 +111,26 @@ public class ProController {
 	}
 	
 	// returns multiple results - use when output is multiline
-	public String execSearch(String command) throws Exception{
+	public List<String> execSearch(String command) throws Exception{
 		
 		Process process = Runtime.getRuntime().exec(new String[] {"/bin/bash", "-c", command});
 
-		StringBuilder output = new StringBuilder();
 
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(process.getInputStream()));
+		
+		List<String> resultLines = new ArrayList<>();
 
 		String line;
 		while ((line = reader.readLine()) != null) {
-			output.append(line + "\n");
+			resultLines.add(line);
 		}
 
 		int exitVal = process.waitFor();
 		if (exitVal == 0) {
-			return output.toString();
+			return resultLines;
 		} else {
-			return "Error running command";
+			return null;
 		}
 
 	}
