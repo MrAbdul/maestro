@@ -12,6 +12,19 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "Server 2",
+            "ip": "http://172.27.143.241:9090",
+            "applications": [
+                {
+                    "name": "app2",
+                    "serviceName": "mydemo",
+                    "logs": [
+                        "/projects/demo1/logs/"
+                    ]
+                }
+            ]
         }
     ]
 }

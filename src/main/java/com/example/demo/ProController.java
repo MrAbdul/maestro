@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,9 +70,12 @@ public class ProController {
 	@PostMapping("searchLogs")
 	public String searchLogs(@RequestBody SearchDTO search) {
 		try {
-			// TODO change path to dynamic by application.properties
-			// TODO return resluts as list of objects instead of string
-			return execSearch(String.format("cd /projects/demo && grep -IRc '%s'",search.getSearch()));
+			// TODO results must be list of objects and includes server names as well
+			StringBuilder result = new StringBuilder();
+			for(String c : search.getLogLocation()) {
+				result.append(execSearch(String.format("cd %s && grep -IRc '%s'",c,search.getSearch())));
+			}
+			return result.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
