@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -45,6 +46,9 @@ public class ConsoleController {
 			model.addAttribute("outputs", outputList);
 
 			return "index";
+		} catch (ResourceAccessException e) {
+			model.addAttribute("outputs", null);
+			return "index";		
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("outputs", null);
@@ -210,6 +214,9 @@ public class ConsoleController {
 			model.addAttribute("applications", applications);
 
 			return "applications";
+		} catch (ResourceAccessException e) {
+			model.addAttribute("applications", null);
+			return "applications";		
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "applications";

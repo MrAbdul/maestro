@@ -36,6 +36,7 @@
 </nav>
 
 <div class="mt-4 container">
+<div class="alert alert-primary" th:if="${applications==null}">Could not connect to agent(s)</div>
 
 <table class="table table-hover mt-4">
   <thead>
