@@ -19,7 +19,7 @@
             "applications": [
                 {
                     "name": "app2",
-                    "serviceName": "mydemo",
+                    "serviceName": "mydemo1",
                     "logs": [
                         "/projects/demo1/logs/"
                     ]

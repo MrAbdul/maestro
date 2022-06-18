@@ -49,7 +49,14 @@
   </thead>
   <tbody>
        <tr th:each="output: ${outputs}">
- <th scope="row"><span th:text="${output.getHostname}"></span></th>
+ <th scope="row">
+ <div class="text-primary" th:if="${output.getCpu==null}">
+ Failed to connect to <span th:text="${output.getHostname}"></span>
+ </div>
+  <div th:unless="${output.getCpu==null}">
+	<span th:text="${output.getHostname}"></span></span>
+ </div>
+</th>
       <td><span th:text="${output.getCpu}"></span></td>
       <td><span class="badge bg-warning m-2" th:text="'Used: '+${output.getMemoryUsed}"></span>
       <span class="badge bg-info" th:text="'Free: '+${output.getMemoryFree}"></span></td>

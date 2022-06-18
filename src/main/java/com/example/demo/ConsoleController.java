@@ -38,17 +38,21 @@ public class ConsoleController {
 
 			AppDTO appDTO = new ObjectMapper().readValue(x, new TypeReference<AppDTO>(){});
 			for(AppServersDTO a : appDTO.getServers()) {
+				try {
 				String url = String.format("%s/data/systemStatus",a.getIp());
 				ResponseEntity<ProDTO> output = restTemplate.getForEntity(url, ProDTO.class);
 				outputList.add(output.getBody());
+				} catch (ResourceAccessException e) {
+					ProDTO p = new ProDTO();
+					p.setHostname(a.getName());
+					p.setCpu(null);
+					outputList.add(p);
+				}
 			}
 
 			model.addAttribute("outputs", outputList);
 
 			return "index";
-		} catch (ResourceAccessException e) {
-			model.addAttribute("outputs", null);
-			return "index";		
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("outputs", null);

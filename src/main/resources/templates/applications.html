@@ -53,7 +53,7 @@
 		<th scope="row"><span th:text="${app.getName}"></span></th>
 		<td><span th:text="${app.getServer}"></span></td>
 		<td><span th:text="${app.getMainPID}"></span></td>
-		<td><span th:text="${app.getStatus}"></span></td>
+		<td><span th:class="'badge '+${app.getStatus=='active' ? 'bg-success' : 'bg-primary'}" th:text="${app.getStatus}"></span></td>
 		<td><button class="btn btn-success">Start</button> 
 		<button class="btn btn-primary">Stop</button> 
 		<button class="btn btn-dark">Kill</button></td>
