@@ -8,10 +8,10 @@
 		<version>2.7.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
-	<version>1.0</version>
-	<name>demo</name>
+	<groupId>com.struct</groupId>
+	<artifactId>maestro</artifactId>
+	<version>0.1.0</version>
+	<name>maestro</name>
 	<description>Execute Remote Process</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -21,10 +21,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-<dependency>
-   <groupId>org.springframework.boot</groupId>
-   <artifactId>spring-boot-starter-thymeleaf</artifactId>
-</dependency>
+		<dependency>
+  			<groupId>org.springframework.boot</groupId>
+   			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
