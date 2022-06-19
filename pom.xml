@@ -11,6 +11,7 @@
 	<groupId>com.struct</groupId>
 	<artifactId>maestro</artifactId>
 	<version>0.1.0</version>
+
 	<name>maestro</name>
 	<description>Execute Remote Process</description>
 	<properties>
@@ -39,7 +40,7 @@
 	</dependencies>
 
 	<build>
-	<finalName>demo</finalName>
+	<finalName>maestro</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
