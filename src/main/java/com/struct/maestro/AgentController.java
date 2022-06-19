@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.struct.maestro;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
