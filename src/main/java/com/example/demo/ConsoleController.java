@@ -12,11 +12,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -184,7 +186,7 @@ public class ConsoleController {
 	public String applications(@ModelAttribute("services") ServiceDTO services, Model model) {
 		
 		try {
-			RestTemplate restTemplate = new RestTemplate();
+			RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
 
 			List<ServiceDTO> applications = new ArrayList<ServiceDTO>();
 
@@ -205,12 +207,19 @@ public class ConsoleController {
 					ServiceDTO s = new ServiceDTO();
 					s.setName(q.getServiceName());
 					HttpEntity<ServiceDTO> request = new HttpEntity<>(s);
-
-					ServiceDTO output = restTemplate.postForObject(String.format("%s/data/serviceshealth",a.getIp()), request, ServiceDTO.class);
-					output.setServer(a.getName());
-					applications.add(output);
+					try {
+						ServiceDTO output = restTemplate.postForObject(String.format("%s/data/serviceshealth",a.getIp()), request, ServiceDTO.class);
+						output.setServer(a.getName());
+						output.setIp(a.getIp());
+						output.setName(q.getName());
+						applications.add(output);
+					} catch (ResourceAccessException e) {
+						ServiceDTO output = new ServiceDTO();
+						output.setServer(a.getName());
+						output.setIp(null);
+						applications.add(output);
+					}
 				}
-
 
 			}
 
@@ -226,4 +235,38 @@ public class ConsoleController {
 			return "applications";
 		}
 	}
+	
+	private SimpleClientHttpRequestFactory getClientHttpRequestFactory() 
+	{
+	    SimpleClientHttpRequestFactory clientHttpRequestFactory
+	                      = new SimpleClientHttpRequestFactory();
+	    //Connect timeout
+	    clientHttpRequestFactory.setConnectTimeout(5_000);
+	     
+	    //Read timeout
+	    clientHttpRequestFactory.setReadTimeout(5_000);
+	    return clientHttpRequestFactory;
+	}
+	
+	@PostMapping("applications")
+	public String appStart(@ModelAttribute("search") SearchDTO search, Model model, @RequestParam("action") String action,
+			@RequestParam("ip") String ip) {
+
+		String command = action.split(":")[0];
+
+		RestTemplate restTemplate = new RestTemplate();
+		
+		ServiceDTO s = new ServiceDTO();
+		s.setName(action.split(":")[1]);
+		s.setCommand(command);
+		
+		HttpEntity<ServiceDTO> request = new HttpEntity<>(s);
+
+		String output = restTemplate.postForObject(String.format("%s/data/servicecontrol",ip), request, String.class);
+
+		System.out.println(output);
+		
+		return "redirect:/applications";
+	}
+	
 }

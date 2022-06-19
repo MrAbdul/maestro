@@ -49,15 +49,29 @@
     </tr>
   </thead>
   <tbody>
-	<tr th:each="app: ${applications}">
-		<th scope="row"><span th:text="${app.getName}"></span></th>
-		<td><span th:text="${app.getServer}"></span></td>
-		<td><span th:text="${app.getMainPID}"></span></td>
-		<td><span th:class="'badge '+${app.getStatus=='active' ? 'bg-success' : 'bg-primary'}" th:text="${app.getStatus}"></span></td>
-		<td><button class="btn btn-success">Start</button> 
-		<button class="btn btn-primary">Stop</button> 
-		<button class="btn btn-dark">Kill</button></td>
-	 </tr>
+    	<tr th:each="app: ${applications}">
+ 			
+
+    		<form action="#" th:action="@{/applications}" th:object="${search}" method="post">
+				<input type="hidden" name="ip" th:value="${app.getIp}" />
+				<th scope="row">
+				<div class="text-primary" th:if="${app.getIp==null}">
+ 			Connection to agent failed<span th:text="${app.getName}"></span>
+ 			</div>
+  			<div th:unless="${app.getIp==null}">
+  			<span th:text="${app.getName}"></span>
+  			</div>
+  			</th>
+				<td><span th:text="${app.getServer}"></span></td>
+				<td><span th:text="${app.getMainPID}"></span></td>
+				<td><span th:class="'badge '+${app.getStatus=='active' ? 'bg-success' : 'bg-primary'}" th:text="${app.getStatus}"></span></td>
+				<td><button class="btn btn-success" name="action" th:value="'start:'+${app.getName}">Start</button> 
+				<button class="btn btn-primary" name="action" th:value="'stop:'+${app.getName}">Stop</button> 
+				<button class="btn btn-dark" name="action" th:value="'kill:'+${app.getName}">Kill</button></td>
+			</form>
+ 			
+	 	</tr>
+     
   </tbody>
 </table>
 

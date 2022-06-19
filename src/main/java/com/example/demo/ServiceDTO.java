@@ -7,7 +7,7 @@ public class ServiceDTO {
 	private String command;
 	private String status;
 	private String mainPID;
-	
+	private String ip;
 	
 	public String getServer() {
 		return server;
@@ -38,6 +38,12 @@ public class ServiceDTO {
 	}
 	public void setMainPID(String mainPID) {
 		this.mainPID = mainPID;
+	}
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 	
 	

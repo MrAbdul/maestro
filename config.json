@@ -15,7 +15,7 @@
         },
         {
             "name": "Server 2",
-            "ip": "http://172.27.143.241:9090",
+            "ip": "http://172.27.143.241:9080",
             "applications": [
                 {
                     "name": "app2",

@@ -100,7 +100,7 @@ public class ProController {
 	}
 	
 	@PostMapping("service")
-	public SearchDTO serviceControl(@RequestBody SearchDTO search) {
+	public SearchDTO services(@RequestBody SearchDTO search) {
 		try {
 			// TODO results must be list of objects and includes server names as well
 			SearchDTO result = new SearchDTO();
@@ -109,6 +109,19 @@ public class ProController {
 				resultLines.addAll(execSearch(String.format("cd %s && grep -iIR '%s'",c,search.getSearch())));
 			}
 			result.setResults(resultLines);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@PostMapping("servicecontrol")
+	public String serviceControl(@RequestBody ServiceDTO serviceDTO) {
+		try {
+
+				String result = execCommand(String.format("systemctl %s %s", serviceDTO.getCommand(), serviceDTO.getName()));
+
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
